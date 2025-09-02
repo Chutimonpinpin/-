@@ -545,4 +545,287 @@
       
       if (bgm.muted || bgm.volume === 0) {
         isAudioEnabled = true;
-        bgm.muted =
+        bgm.muted = false; 
+        if (bgm.paused) bgm.play(); 
+        fadeToVolume(bgm, desiredVolume, 400); 
+        audioToggle.textContent = '🔊 ปิดเสียง';
+      } else {
+        fadeToVolume(bgm, 0, 300); 
+        setTimeout(() => { bgm.muted = true; }, 320); 
+        audioToggle.textContent = '🔇 เปิดเสียง';
+        isAudioEnabled = false;
+      }
+    });
+
+    // ======= Video Controls =======
+    const memVideo = document.getElementById('memVideo');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const videoMuteBtn = document.getElementById('videoMuteBtn');
+
+    function toggleVideoPlay() {
+      if (memVideo.paused) {
+        memVideo.play();
+        playPauseBtn.textContent = '⏸️';
+        // เล่นเสียงประกอบวิดีโอถ้าเปิดอยู่
+        if (isVideoSoundEnabled && !videoAudio.paused) {
+          videoAudio.currentTime = memVideo.currentTime;
+          videoAudio.play();
+        }
+      } else {
+        memVideo.pause();
+        playPauseBtn.textContent = '▶️';
+        videoAudio.pause();
+      }
+    }
+
+    function toggleVideoSound() {
+      if (!isVideoSoundEnabled) {
+        isVideoSoundEnabled = true;
+        videoAudio.muted = false;
+        videoAudio.volume = 0.6;
+        videoMuteBtn.textContent = '🔊';
+        // ซิงค์เวลากับวิดีโอ
+        if (!memVideo.paused) {
+          videoAudio.currentTime = memVideo.currentTime;
+          videoAudio.play();
+        }
+      } else {
+        isVideoSoundEnabled = false;
+        videoAudio.pause();
+        videoAudio.muted = true;
+        videoMuteBtn.textContent = '🔇';
+      }
+    }
+
+    // ซิงค์เสียงประกอบกับวิดีโอ
+    memVideo.addEventListener('timeupdate', () => {
+      if (isVideoSoundEnabled && !videoAudio.paused && Math.abs(videoAudio.currentTime - memVideo.currentTime) > 0.5) {
+        videoAudio.currentTime = memVideo.currentTime;
+      }
+    });
+
+    // หยุดเสียงเมื่อสลับแท็บ
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) { 
+        if (!bgm.paused) bgm.pause(); 
+        if (!videoAudio.paused) videoAudio.pause();
+      } else { 
+        if (isAudioEnabled && !bgm.muted) bgm.play().catch(()=>{});
+        if (isVideoSoundEnabled && !memVideo.paused) {
+          videoAudio.currentTime = memVideo.currentTime;
+          videoAudio.play().catch(()=>{});
+        }
+      }
+    });
+
+    function triggerVideoReveal() {
+      const vf = document.getElementById('videoFrame');
+      vf.classList.remove('show');
+      setTimeout(() => {
+        vf.classList.add('show');
+        // รีเซ็ตปุ่มควบคุมวิดีโอ
+        playPauseBtn.textContent = memVideo.paused ? '▶️' : '⏸️';
+      }, 20);
+    }
+
+    function nextPage() {
+      // หน้าแรก ปุ่ม = "เปิดดูสิ! ✨" → ข้ามไปหน้าที่ 2
+      if (currentPage === 1) {
+        const currentPageEl = document.getElementById(`page${currentPage}`);
+        currentPageEl.classList.add('fade-out');
+
+        setTimeout(() => {
+          currentPageEl.classList.remove('active', 'fade-out');
+          currentPage = 2;
+          const nextPageEl = document.getElementById(`page${currentPage}`);
+          nextPageEl.classList.add('active');
+          updateNextButton();
+        }, 400);
+        return;
+      }
+
+      if (currentPage >= totalPages) {
+        currentPage = 1;
+        showPage(currentPage);
+        return;
+      }
+
+      const currentPageEl = document.getElementById(`page${currentPage}`);
+      currentPageEl.classList.add('fade-out');
+
+      setTimeout(() => {
+        currentPageEl.classList.remove('active', 'fade-out');
+        currentPage++;
+        const nextPageEl = document.getElementById(`page${currentPage}`);
+        nextPageEl.classList.add('active');
+
+        if (currentPage === 3) triggerGalleryReveal();
+        if (currentPage === 5) {
+          triggerVideoReveal();
+          // เริ่มเล่นวิดีโออัตโนมัติ
+          setTimeout(() => {
+            memVideo.play();
+            playPauseBtn.textContent = '⏸️';
+          }, 500);
+        }
+        if (currentPage === totalPages) {
+          setTimeout(() => { 
+            celebrateLastPage();
+          }, 500);
+        }
+
+        updateNextButton();
+      }, 400);
+    }
+
+    function showPage(pageNum) {
+      for (let i = 1; i <= totalPages; i++) {
+        document.getElementById(`page${i}`).classList.remove('active');
+      }
+      const targetPage = document.getElementById(`page${pageNum}`);
+      targetPage.classList.add('active');
+
+      if (pageNum === 3) triggerGalleryReveal();
+      if (pageNum === 5) triggerVideoReveal();
+      updateNextButton();
+    }
+
+    function updateNextButton() {
+      const nextBtn = document.getElementById('nextBtn');
+
+      if (currentPage === 1) {
+        nextBtn.innerHTML = 'เปิดดูสิ! ✨';
+        nextBtn.style.width = 'auto';
+        nextBtn.style.minWidth = '120px';
+        nextBtn.style.padding = '12px 20px';
+        nextBtn.style.borderRadius = '30px';
+        nextBtn.style.background = 'linear-gradient(45deg, #ff69b4, #ff1493)';
+        nextBtn.style.fontSize = 'clamp(0.9rem, 4vw, 1rem)';
+      } else if (currentPage === totalPages) {
+        nextBtn.innerHTML = '🔄';
+        nextBtn.style.width = '60px';
+        nextBtn.style.minWidth = '60px';
+        nextBtn.style.padding = '0';
+        nextBtn.style.borderRadius = '50%';
+        nextBtn.style.background = 'linear-gradient(45deg, #ff6b9d, #c44569)';
+        nextBtn.style.fontSize = 'clamp(1.2rem, 5vw, 1.5rem)';
+      } else {
+        nextBtn.innerHTML = '→';
+        nextBtn.style.width = '60px';
+        nextBtn.style.minWidth = '60px';
+        nextBtn.style.padding = '0';
+        nextBtn.style.borderRadius = '50%';
+        nextBtn.style.background = 'linear-gradient(45deg, #ff69b4, #ff1493)';
+        nextBtn.style.fontSize = 'clamp(1.2rem, 5vw, 1.5rem)';
+      }
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      setInterval(createHeart, 800);
+      setInterval(createSparkle, 1500);
+      for (let i = 0; i < 5; i++) setTimeout(createHeart, i * 200);
+
+      // เตรียมเพลงพื้นหลังให้ autoplay แบบปิดเสียงไว้ก่อน
+      tryAutoPlayMuted();
+      
+      // เปิดเสียงเมื่อมี gesture ครั้งแรก
+      window.addEventListener('click', enableSoundFromGesture);
+      window.addEventListener('keydown', enableSoundFromGesture);
+      window.addEventListener('touchend', enableSoundFromGesture);
+
+      showPage(1);
+
+      // เตรียมเสียงประกอบวิดีโอ
+      videoAudio.volume = 0.6;
+      videoAudio.muted = true;
+
+      // Prevent zoom on double tap (iOS)
+      let lastTouchEnd = 0;
+      document.addEventListener('touchend', (e) => {
+        const now = (new Date()).getTime();
+        if (now - lastTouchEnd <= 300) {
+          e.preventDefault();
+        }
+        lastTouchEnd = now;
+      }, false);
+
+      // Prevent context menu on long press
+      document.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+      });
+    });
+
+    // Keyboard controls
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        e.preventDefault();
+        nextPage();
+      }
+    });
+
+    // Enhanced touch swipe with better sensitivity
+    let touchStartX = 0, touchEndX = 0, touchStartY = 0, touchEndY = 0;
+    let isSwiping = false;
+
+    document.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
+      isSwiping = false;
+    }, { passive: true });
+
+    document.addEventListener('touchmove', (e) => {
+      if (Math.abs(e.changedTouches[0].screenX - touchStartX) > 10) {
+        isSwiping = true;
+      }
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      if (!isSwiping) return;
+      
+      touchEndX = e.changedTouches[0].screenX;
+      touchEndY = e.changedTouches[0].screenY;
+      
+      const deltaX = touchStartX - touchEndX;
+      const deltaY = Math.abs(touchStartY - touchEndY);
+      
+      // ต้องเป็นการ swipe แนวนอนมากกว่าแนวตั้ง และระยะทางเพียงพอ
+      if (Math.abs(deltaX) > deltaY && Math.abs(deltaX) > 50) {
+        if (deltaX > 0) {
+          // Swipe left = next page
+          nextPage();
+        }
+        // สามารถเพิ่ม swipe right = previous page ได้ที่นี่
+      }
+    }, { passive: true });
+
+    // Prevent scroll bounce on iOS
+    document.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+    }, { passive: false });
+
+    // Handle orientation change
+    window.addEventListener('orientationchange', () => {
+      setTimeout(() => {
+        if (currentPage === 3) triggerGalleryReveal();
+        if (currentPage === 5) triggerVideoReveal();
+      }, 500);
+    });
+
+    // เพิ่มการสั่นเล็กน้อยเมื่อถึงหน้าสุดท้าย (ถ้าอุปกรณ์รองรับ)
+    function vibrateIfSupported(pattern = [100]) {
+      if ('vibrate' in navigator) {
+        navigator.vibrate(pattern);
+      }
+    }
+
+    // เรียกใช้การสั่นเมื่อไปถึงหน้าสุดท้าย
+    function celebrateLastPage() {
+      vibrateIfSupported([100, 50, 100]);
+      for (let i = 0; i < 15; i++) {
+        setTimeout(createSparkle, i * 150);
+      }
+    }
+  </script>
+</body>
+</html>
