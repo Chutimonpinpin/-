@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>✨ A Special Surprise ✨</title>
+  <title>✨ A Special Surprise ✨✨</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
 
@@ -101,14 +101,14 @@
     }
     .photo-grid { 
       display: grid; 
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); 
-      gap: 15px; 
-      max-width: 90%; 
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+      gap: 20px; 
+      max-width: 800px; 
       width: 100%; 
     }
 
     .photo-frame {
-      background: #fff; padding: 10px; border-radius: 15px;
+      background: #fff; padding: 15px; border-radius: 20px;
       box-shadow: 0 10px 25px rgba(0,0,0,.1);
       transform: translateY(30px) scale(.96);
       opacity: 0;
@@ -117,8 +117,8 @@
     .photo-frame.show { opacity: 1; transform: translateY(0) scale(1); }
 
     .photo-img { 
-      width: 100%; height: 120px; object-fit: cover; border-radius: 10px; 
-      margin-bottom: 8px; background: linear-gradient(45deg, #ffc0cb, #ffb6c1); 
+      width: 100%; height: 150px; object-fit: cover; border-radius: 12px; 
+      margin-bottom: 10px; background: linear-gradient(45deg, #ffc0cb, #ffb6c1); 
       display: block; 
     }
     .photo-caption { 
@@ -262,7 +262,7 @@
       box-shadow: 0 12px 35px rgba(255,105,180,.5); 
     }
 
-    /* Mobile-specific improvements */
+    /* Responsive - แก้ไขให้เดสก์ท็อปใช้เลย์เอาต์เดิม */
     @media (max-width: 768px) {
       .page { padding: 1rem; }
       .photo-grid { 
@@ -270,6 +270,7 @@
         gap: 12px; 
         max-width: 95%; 
       }
+      .photo-frame { padding: 10px; border-radius: 15px; }
       .photo-img { height: 100px; }
       .surprise-content { padding: 1.2rem; }
       .video-frame { 
@@ -345,15 +346,16 @@
   <!-- Sparkles -->
   <div class="sparkles" id="sparkles"></div>
 
-  <!-- Background Music -->
+  <!-- Background Music - เปลี่ยนเป็นเพลงที่เพราะกว่า -->
   <audio id="bgm" preload="auto" loop playsinline>
-    <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" type="audio/wav">
-    <source src="https://www.zapsplat.com/wp-content/uploads/2015/sound-effects-one/cartoon_pop_bubble_01.mp3" type="audio/mpeg">
+    <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mpeg">
+    <source src="https://audio.jukehost.co.uk/hgGZzZrTcB2OKt6x7TmKTN5WJwqI6t4v" type="audio/mpeg">
   </audio>
   
-  <!-- Video Audio (แยกจากเพลงพื้นหลัง) -->
+  <!-- Video Audio - เพลงประกอบวิดีโอที่นุ่มหู -->
   <audio id="videoAudio" preload="auto" playsinline>
-    <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" type="audio/wav">
+    <source src="https://www.bensound.com/bensound-music/bensound-memories.mp3" type="audio/mpeg">
+    <source src="https://audio.jukehost.co.uk/kTx9VmGHZR2NqE8fK1MqJ4dqXgZ6r2Ap" type="audio/mpeg">
   </audio>
 
   <button class="audio-toggle" id="audioToggle">🔇 เปิดเสียง</button>
@@ -423,7 +425,8 @@
   <div class="page page5" id="page5">
     <h2 class="video-title">วิดีโอความทรงจำ ✨</h2>
     <div class="video-frame" id="videoFrame">
-      <video id="memVideo" poster="" playsinline muted autoplay loop>
+      <video id="memVideo" poster="" playsinline autoplay loop controls>
+        <source src="https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4" type="video/mp4">
         <source src="https://drive.google.com/uc?export=download&id=1nTGWEnG5f1iJ9p7Adlhdb4x0pmlW9opT" type="video/mp4">
         <p>เบราว์เซอร์ของคุณไม่รองรับการเล่นวิดีโอ</p>
       </video>
