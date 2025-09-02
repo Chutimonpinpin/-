@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <title>✨ A Special Surprise ✨</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
@@ -16,6 +16,10 @@
       animation: gradientShift 8s ease infinite;
       min-height: 100vh;
       overflow-x: hidden;
+      overflow-y: hidden; /* ป้องกันการ scroll บนมือถือ */
+      touch-action: manipulation; /* ปรับปรุงการตอบสนองการสัมผัส */
+      -webkit-user-select: none;
+      user-select: none;
     }
 
     @keyframes gradientShift {
@@ -37,7 +41,7 @@
     .page {
       position: fixed; inset: 0;
       display: flex; flex-direction: column; justify-content: center; align-items: center;
-      text-align: center; padding: 2rem;
+      text-align: center; padding: 1rem;
       opacity: 0; transform: translateY(50px);
       transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       z-index: 2;
@@ -49,41 +53,62 @@
     .page1 { background: linear-gradient(135deg, rgba(255,182,193,.3), rgba(255,240,245,.5)); }
     .welcome-text {
       font-family: 'Dancing Script', cursive;
-      font-size: 3.5rem; color: #d63384; margin-bottom: 2rem;
+      font-size: clamp(2rem, 8vw, 3.5rem); /* Responsive font size */
+      color: #d63384; margin-bottom: 2rem;
       text-shadow: 2px 2px 4px rgba(0,0,0,.1); animation: bounce 2s ease-in-out infinite;
     }
     @keyframes bounce { 0%,20%,50%,80%,100% { transform: translateY(0); } 40% { transform: translateY(-20px); } 60% { transform: translateY(-10px); } }
-    .subtitle { font-size: 1.2rem; color: #8e44ad; margin-bottom: 3rem; opacity: 0; animation: fadeInUp 1s ease 1s forwards; }
+    .subtitle { 
+      font-size: clamp(1rem, 4vw, 1.2rem); 
+      color: #8e44ad; margin-bottom: 3rem; opacity: 0; 
+      animation: fadeInUp 1s ease 1s forwards; 
+    }
     @keyframes fadeInUp { from { opacity:0; transform: translateY(30px);} to { opacity:1; transform:none; } }
 
     .cute-button {
       background: linear-gradient(45deg, #ff69b4, #ff1493); color: #fff; border: none;
-      padding: 15px 40px; font-size: 1.1rem; border-radius: 50px; cursor: pointer;
+      padding: 15px 30px; font-size: clamp(1rem, 4vw, 1.1rem); border-radius: 50px; cursor: pointer;
       box-shadow: 0 8px 20px rgba(255,105,180,.3); transition: all .3s ease;
       font-family: 'Poppins', sans-serif; font-weight: 600; animation: pulse 2s ease-in-out infinite;
+      min-height: 48px; /* เพิ่มพื้นที่สัมผัสบนมือถือ */
     }
     @keyframes pulse { 0%{transform:scale(1);} 50%{transform:scale(1.05);} 100%{transform:scale(1);} }
-    .cute-button:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 12px 30px rgba(255,105,180,.4); }
+    .cute-button:hover, .cute-button:active { transform: translateY(-3px) scale(1.05); box-shadow: 0 12px 30px rgba(255,105,180,.4); }
 
     /* Page 2 */
     .page2 { background: linear-gradient(135deg, rgba(255,218,236,.4), rgba(255,255,255,.6)); }
     .love-message {
-      font-family: 'Dancing Script', cursive; font-size: 2.5rem; color: #c2185b;
-      line-height: 1.6; max-width: 800px; margin-bottom: 2rem;
-      animation: typewriter 3s steps(40) .5s forwards; overflow: hidden; white-space: nowrap;
+      font-family: 'Dancing Script', cursive; 
+      font-size: clamp(1.8rem, 6vw, 2.5rem); 
+      color: #c2185b;
+      line-height: 1.6; max-width: 90%; margin-bottom: 2rem;
+      animation: typewriter 3s steps(40) .5s forwards; overflow: hidden;
       border-right: 2px solid #ff69b4;
     }
     @keyframes typewriter { from { width:0; } to { width:100%; white-space:normal; } }
-    .message-details { font-size: 1rem; color: #7b1fa2; max-width: 600px; line-height: 1.8; opacity: 0; animation: fadeInUp 1s ease 3s forwards; }
+    .message-details { 
+      font-size: clamp(0.9rem, 3.5vw, 1rem); 
+      color: #7b1fa2; max-width: 90%; line-height: 1.8; opacity: 0; 
+      animation: fadeInUp 1s ease 3s forwards; 
+    }
 
     /* Page 3 - Gallery */
     .page3 { background: linear-gradient(135deg, rgba(255,240,245,.5), rgba(255,255,255,.7)); }
-    .gallery-title { font-family: 'Dancing Script', cursive; font-size: 3rem; color: #ad1457; margin-bottom: 2rem; }
-    .photo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; max-width: 800px; width: 100%; }
+    .gallery-title { 
+      font-family: 'Dancing Script', cursive; 
+      font-size: clamp(2rem, 7vw, 3rem); 
+      color: #ad1457; margin-bottom: 2rem; 
+    }
+    .photo-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); 
+      gap: 15px; 
+      max-width: 90%; 
+      width: 100%; 
+    }
 
-    /* Stagger reveal frames */
     .photo-frame {
-      background: #fff; padding: 15px; border-radius: 20px;
+      background: #fff; padding: 10px; border-radius: 15px;
       box-shadow: 0 10px 25px rgba(0,0,0,.1);
       transform: translateY(30px) scale(.96);
       opacity: 0;
@@ -91,37 +116,72 @@
     }
     .photo-frame.show { opacity: 1; transform: translateY(0) scale(1); }
 
-    .photo-img { width: 100%; height: 150px; object-fit: cover; border-radius: 12px; margin-bottom: 10px; background: linear-gradient(45deg, #ffc0cb, #ffb6c1); display: block; }
-    .photo-caption { text-align: center; color: #8e24aa; font-weight: 500; }
+    .photo-img { 
+      width: 100%; height: 120px; object-fit: cover; border-radius: 10px; 
+      margin-bottom: 8px; background: linear-gradient(45deg, #ffc0cb, #ffb6c1); 
+      display: block; 
+    }
+    .photo-caption { 
+      text-align: center; color: #8e24aa; font-weight: 500; 
+      font-size: clamp(0.8rem, 3vw, 0.9rem);
+    }
 
     /* Page 4 */
     .page4 { background: linear-gradient(135deg, rgba(255,192,203,.3), rgba(255,255,255,.8)); }
-    .final-message { font-family: 'Dancing Script', cursive; font-size: 4rem; color: #c2185b; margin-bottom: 2rem; animation: heartbeat 2s ease-in-out infinite; }
+    .final-message { 
+      font-family: 'Dancing Script', cursive; 
+      font-size: clamp(2.5rem, 8vw, 4rem); 
+      color: #c2185b; margin-bottom: 2rem; 
+      animation: heartbeat 2s ease-in-out infinite; 
+    }
     @keyframes heartbeat { 0%{transform:scale(1);}14%{transform:scale(1.1);}28%{transform:scale(1);}42%{transform:scale(1.1);}70%{transform:scale(1);} }
-    .surprise-content { background:#fff; padding:2rem; border-radius:25px; box-shadow:0 15px 35px rgba(255,105,180,.2); max-width:600px; animation: zoomIn 1s ease .5s backwards; }
+    .surprise-content { 
+      background:#fff; padding:1.5rem; border-radius:20px; 
+      box-shadow:0 15px 35px rgba(255,105,180,.2); max-width:90%; 
+      animation: zoomIn 1s ease .5s backwards; 
+    }
     @keyframes zoomIn { from{opacity:0; transform:scale(.5);} to{opacity:1; transform:scale(1);} }
-    .surprise-text { color:#7b1fa2; font-size:1.3rem; line-height:1.6; margin-bottom:1rem; }
+    .surprise-text { 
+      color:#7b1fa2; 
+      font-size: clamp(1rem, 4vw, 1.3rem); 
+      line-height:1.6; margin-bottom:1rem; 
+    }
 
     /* Page 5 - Video Show */
-    .page5 { background: radial-gradient(1200px 600px at 50% 10%, rgba(255,255,255,.8), rgba(255,192,203,.35) 60%, rgba(255,192,203,0) 70%), linear-gradient(135deg, rgba(255,236,244,.6), rgba(255,200,220,.4)); }
-    .video-title { font-family: 'Dancing Script', cursive; font-size: 3.2rem; color: #b31269; margin-bottom: 1.2rem; text-shadow: 0 8px 30px rgba(255, 0, 102, .15); }
+    .page5 { 
+      background: radial-gradient(1200px 600px at 50% 10%, rgba(255,255,255,.8), rgba(255,192,203,.35) 60%, rgba(255,192,203,0) 70%), 
+                 linear-gradient(135deg, rgba(255,236,244,.6), rgba(255,200,220,.4)); 
+    }
+    .video-title { 
+      font-family: 'Dancing Script', cursive; 
+      font-size: clamp(2rem, 7vw, 3.2rem); 
+      color: #b31269; margin-bottom: 1rem; 
+      text-shadow: 0 8px 30px rgba(255, 0, 102, .15); 
+    }
     .video-frame {
-      position: relative; width: min(900px, 92vw); aspect-ratio: 16/9; border-radius: 28px; overflow: hidden;
+      position: relative; 
+      width: min(90vw, 800px); 
+      aspect-ratio: 16/9; 
+      border-radius: 20px; 
+      overflow: hidden;
       box-shadow: 0 25px 70px rgba(255, 105, 180, .35), 0 6px 18px rgba(0,0,0,.12);
       transform: translateY(24px) scale(.98); opacity: 0;
       transition: transform .9s cubic-bezier(.16,1,.3,1), opacity .9s ease;
     }
     .video-frame.show { transform: translateY(0) scale(1); opacity: 1; }
-    .video-frame::before { /* glow border */
-      content: ""; position: absolute; inset: -2px; border-radius: 30px;
+    .video-frame::before {
+      content: ""; position: absolute; inset: -2px; border-radius: 22px;
       background: conic-gradient(from 180deg, #ff8ac6, #ffd0e6, #ffe7f3, #ff8ac6);
       -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-      -webkit-mask-composite: xor; mask-composite: exclude; padding: 2px; pointer-events: none; filter: blur(0.6px);
-      animation: spinHue 8s linear infinite;
+      -webkit-mask-composite: xor; mask-composite: exclude; padding: 2px; pointer-events: none; 
+      filter: blur(0.6px); animation: spinHue 8s linear infinite;
     }
     @keyframes spinHue { to { filter: hue-rotate(360deg); } }
 
-    .video-frame video { width: 100%; height: 100%; object-fit: cover; display: block; filter: contrast(1.02) saturate(1.08); }
+    .video-frame video { 
+      width: 100%; height: 100%; object-fit: cover; display: block; 
+      filter: contrast(1.02) saturate(1.08); 
+    }
 
     .vignette { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(80% 110% at 50% 50%, rgba(0,0,0,0) 40%, rgba(0,0,0,.28) 100%); }
     .scanlines { position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient( to bottom, rgba(255,255,255,.06) 0px, rgba(255,255,255,.06) 2px, transparent 2px, transparent 4px ); mix-blend-mode: overlay; opacity: .35; animation: drift 6s linear infinite; }
@@ -132,43 +192,151 @@
     .sparkle { position: absolute; color: #ffd700; font-size: 20px; animation: sparkle 2s linear infinite; }
     @keyframes sparkle { 0%,100%{opacity:0; transform:scale(0) rotate(0);} 50%{opacity:1; transform:scale(1) rotate(180deg);} }
 
-    /* Audio toggle */
+    /* Audio toggle - ปรับปรุงสำหรับมือถือ */
     .audio-toggle {
-      position: fixed; left: 22px; bottom: 28px; z-index: 11;
-      background: rgba(255, 255, 255, .85); backdrop-filter: blur(6px);
-      color: #b31269; border: 2px solid rgba(255, 105, 180, .35);
-      padding: 8px 14px; border-radius: 999px; font-weight: 600; cursor: pointer;
-      box-shadow: 0 8px 22px rgba(255, 105, 180, .25);
+      position: fixed; left: 15px; bottom: 20px; z-index: 11;
+      background: rgba(255, 255, 255, .9); backdrop-filter: blur(8px);
+      color: #b31269; border: 2px solid rgba(255, 105, 180, .4);
+      padding: 10px 16px; border-radius: 25px; font-weight: 600; cursor: pointer;
+      box-shadow: 0 8px 25px rgba(255, 105, 180, .3);
       transition: transform .2s ease, box-shadow .2s ease;
+      font-size: 14px;
+      min-height: 44px; /* เพิ่มขนาดสำหรับสัมผัสง่าย */
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .audio-toggle:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(255,105,180,.35); }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .welcome-text { font-size: 2.5rem; }
-      .love-message { font-size: 2rem; }
-      .final-message { font-size: 3rem; }
-      .photo-grid { grid-template-columns: repeat(2, 1fr); }
-      .video-title { font-size: 2.4rem; }
-    }
-    @media (max-width: 480px) {
-      .welcome-text { font-size: 2rem; }
-      .love-message { font-size: 1.5rem; }
-      .final-message { font-size: 2.5rem; }
-      .photo-grid { grid-template-columns: 1fr; }
+    .audio-toggle:hover, .audio-toggle:active { 
+      transform: translateY(-2px); 
+      box-shadow: 0 12px 35px rgba(255,105,180,.4); 
     }
 
+    /* Video controls - เพิ่มปุ่มควบคุมวิดีโอสำหรับมือถือ */
+    .video-controls {
+      position: absolute;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 5;
+    }
+
+    .video-control-btn {
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,.2);
+      transition: all .3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .video-control-btn:hover, .video-control-btn:active {
+      transform: scale(1.1);
+      box-shadow: 0 6px 18px rgba(0,0,0,.3);
+    }
+
+    /* Next Button - ปรับปรุงสำหรับมือถือ */
     .next-button {
-      position: fixed; bottom: 30px; right: 30px;
+      position: fixed; bottom: 20px; right: 15px;
       background: linear-gradient(45deg, #ff69b4, #ff1493); color:#fff; border: none;
-      width: 60px; height: 60px; border-radius: 50%; font-size: 1.5rem; cursor: pointer;
-      box-shadow: 0 8px 20px rgba(255,105,180,.3); transition: all .3s ease; z-index: 10;
+      min-width: 60px; min-height: 60px; border-radius: 50%; 
+      font-size: clamp(1.2rem, 5vw, 1.5rem); cursor: pointer;
+      box-shadow: 0 8px 25px rgba(255,105,180,.4); 
+      transition: all .3s ease; z-index: 10;
       animation: float 3s ease-in-out infinite;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     @keyframes float { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
-    .next-button:hover { transform: scale(1.1); box-shadow: 0 12px 30px rgba(255,105,180,.4); }
+    .next-button:hover, .next-button:active { 
+      transform: scale(1.1); 
+      box-shadow: 0 12px 35px rgba(255,105,180,.5); 
+    }
+
+    /* Mobile-specific improvements */
+    @media (max-width: 768px) {
+      .page { padding: 1rem; }
+      .photo-grid { 
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 12px; 
+        max-width: 95%; 
+      }
+      .photo-img { height: 100px; }
+      .surprise-content { padding: 1.2rem; }
+      .video-frame { 
+        width: 95vw; 
+        border-radius: 15px; 
+      }
+      .audio-toggle {
+        left: 10px;
+        bottom: 15px;
+        padding: 8px 12px;
+        font-size: 12px;
+      }
+      .next-button {
+        right: 10px;
+        bottom: 15px;
+        min-width: 50px;
+        min-height: 50px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .photo-grid { 
+        grid-template-columns: 1fr; 
+        gap: 10px; 
+      }
+      .photo-img { height: 120px; }
+      .video-frame { 
+        width: 98vw; 
+        border-radius: 12px; 
+      }
+    }
+
+    /* Touch feedback */
+    .touch-feedback {
+      position: absolute;
+      pointer-events: none;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,105,180,0.6) 0%, transparent 70%);
+      transform: scale(0);
+      animation: ripple 0.6s ease-out;
+    }
+
+    @keyframes ripple {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
 
     .hidden { display: none !important; }
+
+    /* Improved touch responsiveness */
+    @media (hover: none) and (pointer: coarse) {
+      .cute-button:hover, 
+      .next-button:hover, 
+      .audio-toggle:hover,
+      .video-control-btn:hover {
+        transform: none;
+      }
+      
+      .cute-button:active, 
+      .next-button:active, 
+      .audio-toggle:active,
+      .video-control-btn:active {
+        transform: scale(0.95);
+      }
+    }
   </style>
 </head>
 <body>
@@ -177,16 +345,23 @@
   <!-- Sparkles -->
   <div class="sparkles" id="sparkles"></div>
 
-  <!-- Background Music (MP3) -->
-  <!-- ใส่ไฟล์ของคุณเองแทน music.mp3 ได้ เช่น ./assets/bgm.mp3 -->
-  <audio id="bgm" src="music.mp3" preload="auto" loop playsinline></audio>
+  <!-- Background Music -->
+  <audio id="bgm" preload="auto" loop playsinline>
+    <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" type="audio/wav">
+    <source src="https://www.zapsplat.com/wp-content/uploads/2015/sound-effects-one/cartoon_pop_bubble_01.mp3" type="audio/mpeg">
+  </audio>
+  
+  <!-- Video Audio (แยกจากเพลงพื้นหลัง) -->
+  <audio id="videoAudio" preload="auto" playsinline>
+    <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" type="audio/wav">
+  </audio>
+
   <button class="audio-toggle" id="audioToggle">🔇 เปิดเสียง</button>
 
   <!-- Page 1: Welcome -->
   <div class="page page1 active" id="page1">
     <h1 class="welcome-text">MY LOVE💕</h1>
     <p class="subtitle">I have something special for you</p>
-    <!-- ปุ่มตรงกลางเดิมถูกเอาออก เพื่อใช้ปุ่มถัดไปด้านล่างขวาแทน -->
   </div>
 
   <!-- Page 2: Love Message -->
@@ -248,20 +423,48 @@
   <div class="page page5" id="page5">
     <h2 class="video-title">วิดีโอความทรงจำ ✨</h2>
     <div class="video-frame" id="videoFrame">
-      <!-- ใส่วิดีโอของคุณเองแทน yourvideo.mp4 เช่น ./assets/memories.mp4 -->
-      <video id="memVideo" src="https://drive.google.com/uc?export=download&id=1nTGWEnG5f1iJ9p7Adlhdb4x0pmlW9opT
-" poster="" playsinline muted autoplay loop></video>
+      <video id="memVideo" poster="" playsinline muted autoplay loop>
+        <source src="https://drive.google.com/uc?export=download&id=1nTGWEnG5f1iJ9p7Adlhdb4x0pmlW9opT" type="video/mp4">
+        <p>เบราว์เซอร์ของคุณไม่รองรับการเล่นวิดีโอ</p>
+      </video>
       <div class="vignette"></div>
       <div class="scanlines"></div>
+      
+      <!-- Video Controls -->
+      <div class="video-controls">
+        <button class="video-control-btn" id="playPauseBtn" onclick="toggleVideoPlay()">▶️</button>
+        <button class="video-control-btn" id="videoMuteBtn" onclick="toggleVideoSound()">🔇</button>
+      </div>
     </div>
   </div>
 
-  <!-- Next Button (ใช้เป็นปุ่ม "เปิดดูสิ! ✨" เฉพาะหน้าแรก) -->
+  <!-- Next Button -->
   <button class="next-button" id="nextBtn" onclick="nextPage()">→</button>
 
   <script>
     let currentPage = 1;
-    const totalPages = 5; // เพิ่มเป็น 5 หน้า
+    const totalPages = 5;
+    let isAudioEnabled = false;
+    let isVideoSoundEnabled = false;
+
+    // Touch feedback effect
+    function createTouchFeedback(x, y) {
+      const feedback = document.createElement('div');
+      feedback.className = 'touch-feedback';
+      feedback.style.left = (x - 25) + 'px';
+      feedback.style.top = (y - 25) + 'px';
+      feedback.style.width = '50px';
+      feedback.style.height = '50px';
+      document.body.appendChild(feedback);
+      setTimeout(() => feedback.remove(), 600);
+    }
+
+    // Add touch feedback to all interactive elements
+    document.addEventListener('touchstart', (e) => {
+      if (e.target.closest('.next-button, .audio-toggle, .video-control-btn, .cute-button')) {
+        createTouchFeedback(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    });
 
     // Floating hearts
     function createHeart() {
@@ -287,21 +490,6 @@
       setTimeout(() => sparkle.remove(), 2000);
     }
 
-    // เปิดแกลเลอรีแบบข้ามจากหน้าแรก พร้อมสั่งเผยรูปแบบสเต็ป
-    function openGallery() {
-      const p1 = document.getElementById('page1');
-      p1.classList.add('fade-out');
-      setTimeout(() => {
-        p1.classList.remove('active', 'fade-out');
-        currentPage = 3;
-        const p3 = document.getElementById('page3');
-        p3.classList.add('active');
-        triggerGalleryReveal();
-        updateNextButton();
-      }, 400);
-    }
-
-    // เผยรูปแบบไล่ลำดับ
     function triggerGalleryReveal() {
       const frames = document.querySelectorAll('#galleryGrid .photo-frame');
       frames.forEach((el, i) => {
@@ -314,158 +502,47 @@
       });
     }
 
-    // ======= Audio Autoplay Handling =======
+    // ======= Audio System =======
     const bgm = document.getElementById('bgm');
+    const videoAudio = document.getElementById('videoAudio');
     const audioToggle = document.getElementById('audioToggle');
-    let desiredVolume = 0.6; // ระดับเสียงเป้าหมาย
+    let desiredVolume = 0.4; // ลดระดับเสียงเพื่อความสบาย
 
     function tryAutoPlayMuted() {
-      // เริ่มแบบปิดเสียงเพื่อผ่านนโยบาย autoplay ของเบราว์เซอร์
       bgm.volume = 0;
       bgm.muted = true;
-      bgm.play().catch(() => {/* เงียบไว้ถ้าโดนบล็อก */});
+      bgm.play().catch(() => {});
     }
 
-    function fadeToVolume(target = desiredVolume, duration = 800) {
-      const steps = 16; const stepTime = duration / steps;
-      const start = bgm.volume; const delta = target - start;
+    function fadeToVolume(audioElement, target = desiredVolume, duration = 800) {
+      const steps = 16; 
+      const stepTime = duration / steps;
+      const start = audioElement.volume; 
+      const delta = target - start;
       let i = 0;
       const t = setInterval(() => {
         i++;
-        bgm.volume = Math.min(1, Math.max(0, start + (delta * (i/steps)) ));
+        audioElement.volume = Math.min(1, Math.max(0, start + (delta * (i/steps))));
         if (i >= steps) clearInterval(t);
       }, stepTime);
     }
 
     function enableSoundFromGesture() {
-      // เรียกครั้งแรกหลังผู้ใช้มี gesture ใดๆ
-      if (bgm.muted) {
+      if (!isAudioEnabled) {
+        isAudioEnabled = true;
         bgm.muted = false;
-        fadeToVolume(desiredVolume, 800);
+        fadeToVolume(bgm, desiredVolume, 800);
         audioToggle.textContent = '🔊 ปิดเสียง';
       }
-      // ยกเลิก listener หลังเปิดเสียงแล้ว
       window.removeEventListener('click', enableSoundFromGesture);
       window.removeEventListener('keydown', enableSoundFromGesture);
       window.removeEventListener('touchend', enableSoundFromGesture);
     }
 
-    audioToggle.addEventListener('click', () => {
+    audioToggle.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      
       if (bgm.muted || bgm.volume === 0) {
-        bgm.muted = false; if (bgm.paused) bgm.play(); fadeToVolume(desiredVolume, 400); audioToggle.textContent = '🔊 ปิดเสียง';
-      } else {
-        fadeToVolume(0, 300); setTimeout(()=>{ bgm.muted = true; }, 320); audioToggle.textContent = '🔇 เปิดเสียง';
-      }
-    });
-
-    // หยุดเสียงเมื่อสลับแท็บ เพื่อลดรบกวน
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) { if (!bgm.paused) bgm.pause(); }
-      else { if (!bgm.muted) bgm.play().catch(()=>{}); }
-    });
-
-    // ======= Video Page Helpers =======
-    function triggerVideoReveal() {
-      const vf = document.getElementById('videoFrame');
-      vf.classList.remove('show');
-      setTimeout(() => vf.classList.add('show'), 20);
-    }
-
-    function nextPage() {
-      // หน้าแรก ปุ่ม = "เปิดดูสิ! ✨" → ข้ามไปหน้าแกลเลอรีทันที
-      if (currentPage === 1) { openGallery(); return; }
-
-      if (currentPage >= totalPages) {
-        currentPage = 1;
-        showPage(currentPage);
-        return;
-      }
-
-      const currentPageEl = document.getElementById(`page${currentPage}`);
-      currentPageEl.classList.add('fade-out');
-
-      setTimeout(() => {
-        currentPageEl.classList.remove('active', 'fade-out');
-        currentPage++;
-        const nextPageEl = document.getElementById(`page${currentPage}`);
-        nextPageEl.classList.add('active');
-
-        if (currentPage === 3) triggerGalleryReveal();
-        if (currentPage === 5) triggerVideoReveal();
-        if (currentPage === totalPages) {
-          setTimeout(() => { for (let i = 0; i < 20; i++) setTimeout(createSparkle, i * 100); }, 500);
-        }
-
-        updateNextButton();
-      }, 400);
-    }
-
-    function showPage(pageNum) {
-      for (let i = 1; i <= totalPages; i++) {
-        document.getElementById(`page${i}`).classList.remove('active');
-      }
-      const targetPage = document.getElementById(`page${pageNum}`);
-      targetPage.classList.add('active');
-
-      if (pageNum === 3) triggerGalleryReveal();
-      if (pageNum === 5) triggerVideoReveal();
-      updateNextButton();
-    }
-
-    function updateNextButton() {
-      const nextBtn = document.getElementById('nextBtn');
-
-      if (currentPage === 1) {
-        // หน้าแรก → แสดงเป็นปุ่ม "เปิดดูสิ! ✨"
-        nextBtn.innerHTML = 'เปิดดูสิ! ✨';
-        nextBtn.style.width = 'auto';
-        nextBtn.style.padding = '12px 25px';
-        nextBtn.style.borderRadius = '50px';
-        nextBtn.style.background = 'linear-gradient(45deg, #ff69b4, #ff1493)';
-      } else if (currentPage === totalPages) {
-        nextBtn.innerHTML = '🔄';
-        nextBtn.style.width = '60px';
-        nextBtn.style.padding = '0';
-        nextBtn.style.borderRadius = '50%';
-        nextBtn.style.background = 'linear-gradient(45deg, #ff6b9d, #c44569)';
-      } else {
-        nextBtn.innerHTML = '→';
-        nextBtn.style.width = '60px';
-        nextBtn.style.padding = '0';
-        nextBtn.style.borderRadius = '50%';
-        nextBtn.style.background = 'linear-gradient(45deg, #ff69b4, #ff1493)';
-      }
-    }
-
-    // Initialize
-    document.addEventListener('DOMContentLoaded', () => {
-      setInterval(createHeart, 800);
-      setInterval(createSparkle, 1500);
-      for (let i = 0; i < 5; i++) setTimeout(createHeart, i * 200);
-
-      // เตรียมเพลงพื้นหลังให้ autoplay แบบปิดเสียงไว้ก่อน
-      tryAutoPlayMuted();
-      // เปิดเสียงเมื่อมี gesture ครั้งแรก
-      window.addEventListener('click', enableSoundFromGesture, { once: true });
-      window.addEventListener('keydown', enableSoundFromGesture, { once: true });
-      window.addEventListener('touchend', enableSoundFromGesture, { once: true });
-
-      // ให้ปุ่มเริ่มเป็น "เปิดดูสิ! ✨" ตามเงื่อนไขหน้าแรก
-      showPage(1);
-    });
-
-    // Keyboard
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight' || e.key === ' ') nextPage();
-    });
-
-    // Touch swipe
-    let touchStartX = 0, touchEndX = 0;
-    document.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; });
-    document.addEventListener('touchend', (e) => {
-      touchEndX = e.changedTouches[0].screenX;
-      if (touchStartX - touchEndX > 50) nextPage();
-    });
-  </script>
-</body>
-</html>
+        isAudioEnabled = true;
+        bgm.muted =
